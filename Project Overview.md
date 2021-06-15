@@ -41,6 +41,11 @@
   * Make PSSMs of Charge, Size, etc.
 5. Constructing NN
 6. Make evaluation script
+ * Comparing different alelles
+ * Statistics
+ * Encoding scheme complexity?
+ * Plot number of binders versus encoding schemes
+ * Performance on y and size of data set on x - comparing the encoding schemes 
 
 ## Discussion notes
 -	Hydrophobicity and charge relative change depending on the peptide composition
