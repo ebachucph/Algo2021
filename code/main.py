@@ -1,6 +1,12 @@
 from model import *
+from parser import *
 
 ## Call parser
+allele='A0301'
+filename="../data/%s.dat"%allele
+
+raw_data=load_peptide_target(filename)
+
 
 ## Call encoder
 
