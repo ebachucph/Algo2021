@@ -124,7 +124,7 @@ def train_with_minibatches():
     return net, train_loss, valid_loss
 
 
-def plot_losses(burn_in=20):
+def plot_losses(burn_in=20, train_loss, valid_loss):
     plt.figure(figsize=(15,4))
     plt.plot(list(range(burn_in, len(train_loss))), train_loss[burn_in:], label='Training loss')
     plt.plot(list(range(burn_in, len(valid_loss))), valid_loss[burn_in:], label='Validation loss')
