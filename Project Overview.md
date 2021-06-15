@@ -31,17 +31,17 @@
   * If too big, split up.
 
 ## To-Do
-1. GitHub repo
+1. GitHub repo (Done)
 2. Markdown file for report
 3.	Make parser script
-  * To parse peptide data
+  * To parse peptide data (Alex)
     * Replicate method in exercises in Pandas
-  * To parse encoding schemes
+  * To parse encoding schemes (Emil)
     * Replicate method in exercises in Pandas
-4. Finding data for encoding schemes / make PSSM’s
+4. Finding data for encoding schemes / make PSSM’s (Emil)
   * Make PSSMs of Charge, Size, etc.
-5. Constructing NN
-6. Make evaluation script
+5. Constructing NN (Lasse)
+6. Make evaluation script (Alex)
  * Comparing different alelles
  * Statistics
  * Encoding scheme complexity?
