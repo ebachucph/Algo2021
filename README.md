@@ -4,7 +4,7 @@ Repository for project in Algorithms in Bioinformatics.
 ## Project description
 Peptide MHC binding predictions using artificial neural networks with different sequence encoding schemes.
 
-**Participants**
+**Participants - Group 12**
 * Emil Bach
 * Lasse Blaabjerg
 * Alexander Gmeiner
