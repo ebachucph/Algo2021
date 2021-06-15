@@ -3,6 +3,7 @@
 1. Parser
   * Pandas
   * Data files are text files (link in paper Peters et. al. 2006)
+  * Peptide data will be retrieved from the SMM exercise to save time...
 2. Encoding schemes
   * One-hot
   * Modified one-hot
