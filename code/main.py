@@ -1,11 +1,16 @@
 from parser import *
 from encoding import *
 from model import *
+from plots import *
 import torch
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
+from sklearn.metrics import roc_curve, auc, matthews_corrcoef
+
+## Arguments
+BINDER_THRESHOLD = 0.426
 
 ## Call parser
 allele='A0301'
@@ -58,3 +63,23 @@ net, train_loss, valid_loss = train_with_minibatches(net, train_loader, valid_lo
 
 # Plot learning curve
 plot_losses(train_loss, valid_loss)
+
+## Evaluation
+
+# evaluate on test set
+net.eval()
+pred = net(x_valid)
+loss = criterion(pred, y_valid)
+
+
+# plot target values
+plot_target_values([(pd.DataFrame(pred.data.numpy(), columns=['target']), 'Prediction'), (X_raw.iloc[TRAIN_VALID_SPLIT:].reset_index(), 'Target')], BINDER_THRESHOLD)
+
+
+# transform targets to classes
+y_test_class = np.where(y_valid.flatten() >= BINDER_THRESHOLD, 1, 0)
+y_pred_class = np.where(pred.flatten() >= BINDER_THRESHOLD, 1, 0)
+
+
+# Plot the ROC
+
