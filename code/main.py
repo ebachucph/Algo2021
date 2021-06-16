@@ -11,7 +11,7 @@ from sklearn.metrics import roc_curve, auc, matthews_corrcoef
 import pandas as pd
 
 # Define hyperparameters
-EPOCHS = 100
+EPOCHS = 800
 MINI_BATCH_SIZE = 32
 N_HIDDEN_NEURONS_1 = 16
 N_HIDDEN_NEURONS_2 = 16
@@ -21,19 +21,16 @@ PATIENCE = EPOCHS // 10
 ## Loop over different encodings and training sizes
 alleles = ['A0301']
 encodings = ["BLOSUM50","ONE_HOT"]
-train_sizes = [500, 1000]
+train_sizes = [100, 500, 1000]
 perm_test = len(alleles)*len(encodings)*len(train_sizes)
 
 df_test = pd.DataFrame(columns=['Allele', 'Encoding', 'Train_size', 'MCC', 'AUC'])
-
-corr_mat = np.zeros((len(encodings), len(encodings)))
-auc_mat = np.zeros((len(encodings), len(encodings)))
 
 for i, allele in enumerate(alleles):
     for j, encoding in enumerate(encodings):
         for k, train_size in enumerate(train_sizes):
        
-            print(f"Training and testing using encoding: {encoding} with training data size: {train_size}")    
+            print(f"Training and testing on allele {allele} using encoding: {encoding} with training data size: {train_size}") 
     
             ## Do parsing
             filename="../data/%s.dat"%allele
@@ -45,8 +42,8 @@ for i, allele in enumerate(alleles):
             n_features = X_encoded.shape[-1]
             print(f"Number of features in encoding: {n_features}")
     
-    		## Prepare data for ANN
-    		#Split into train, validation and test
+            ## Prepare data for ANN
+            #Split into train, validation and test
             TEST_SPLIT = 0.1
             TRAIN_VALID_SPLIT = 0.8
             X_encoded_test = X_encoded[:int(TEST_SPLIT*len(X_encoded))]
@@ -58,14 +55,13 @@ for i, allele in enumerate(alleles):
             X_encoded_trainval = X_encoded[int(TEST_SPLIT*len(X_encoded)):]
             Y_trainval = Y[int(TEST_SPLIT*len(X_encoded)):]
     
-    		# Split into train and val
+            # Split into train and val
             x_train_ = X_encoded_trainval[:int(TRAIN_VALID_SPLIT*len(X_encoded_trainval))]
             x_valid_ = X_encoded_trainval[int(TRAIN_VALID_SPLIT*len(X_encoded_trainval)):]
             y_train_ = Y_trainval[:int(TRAIN_VALID_SPLIT*len(X_encoded_trainval))]
             y_valid_ = Y_trainval[int(TRAIN_VALID_SPLIT*len(X_encoded_trainval)):]
     
             # Adjust training data size
-            #print(len(x_train_))
             x_train_ = x_train_[:train_size]
             y_train_ = y_train_[:train_size]
     
@@ -124,6 +120,10 @@ for i, allele in enumerate(alleles):
                                       'AUC': roc_auc}, 
                                      ignore_index = True)            
             
-            print(f"Encoding {encoding} with training size {train_size} achieves MCC of {mcc:.2f} and AUC {roc_auc:.2f}")
+            print(f"Allele {allele} using encoding {encoding} with training size {train_size} achieves MCC of {mcc:.2f} and AUC of {roc_auc:.2f}")
 
 print(df_test)
+
+# Do plotting
+performance_encoding_plot(df_test,"MCC")
+performance_encoding_plot(df_test,"AUC")

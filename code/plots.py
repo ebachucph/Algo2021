@@ -89,31 +89,14 @@ def plot_mcc(y_test, pred, mcc):
     plt.show()
     
 
-def performance_encoding_plot(df, perf_meassure):
-    print(type(perf_meassure))
-    for allele, d_ in df.groupby('alleles'):
-        #print(d_)
+def performance_encoding_plot(df, perf_measure):
+    for allele, d_ in df.groupby('Allele'):
         fig, axes = plt.subplots()
-        for encod, d in d_.groupby('encoding'):
+        for encod, d in d_.groupby('Encoding'):
             axes.set_title("Performance versus Training Set Size %s"%allele)
-            axes.plot(d.sizes, d[perf_meassure], linestyle='-', label=encod )
+            axes.plot(d["Train_size"], d[perf_measure], linestyle='-', label=encod )
             axes.legend(loc = 'upper left')
-            #plt.plot([0, 1], [0, 1], c='black', linestyle='--')
-            axes.set_ylabel('%s'%perf_meassure)
+            axes.set_ylabel('%s'%perf_measure)
             axes.set_xlabel("Training Set Size")
-        fig.savefig("perf_enc_%s"%allele)
+        fig.savefig("perf_enc_%s_%s"%(allele,perf_measure))
         plt.show()
-    
-'''
-alleles=["A0101"]*8+["A0201"]*8
-encoding=(["1-hot"]*4+["sparse"]*4)*2
-sizes= [10,20,30,40]*4
-auc = ([0.1,0.2,0.15,0.11]+[0.3,0.6,0.25,0.71])*2
-mcc = ([0.1,0.4,0.15,0.11]+[0.2,0.6,0.25,0.71])*2
-
-df=pd.DataFrame([alleles,encoding,sizes,auc,mcc], index=["alleles","encoding","sizes","auc","mcc"]).T
-
-performance_encoding_plot(df, 'auc')
-performance_encoding_plot(df, 'mcc')
-'''
-    
