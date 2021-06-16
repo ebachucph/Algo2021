@@ -18,14 +18,17 @@ class ANN(nn.Module):
         self.fc1 = nn.Linear(n_features, n_l1)
         self.fc2 = nn.Linear(n_l1, n_l2)
         self.fc3 = nn.Linear(n_l2, 1)
-        
+
+        # Activation function
+        self.leakyrelu = nn.LeakyReLU()
+         
         # BatchNorm
         self.bn_1 = nn.BatchNorm1d(num_features=n_l1)
         self.bn_2 = nn.BatchNorm1d(num_features=n_l2)
 
     def forward(self, x):
-        x = self.bn_1(nn.LeakyReLU(self.fc1(x)))
-        x = self.bn_2(nn.LeakyReLU(self.fc2(x)))
+        x = self.bn_1(self.leakyrelu(self.fc1(x)))
+        x = self.bn_2(self.leakyrelu(self.fc2(x)))
         x = self.fc3(x)
         return x
     
@@ -53,13 +56,13 @@ class EarlyStopping:
         self.delta = delta
         self.path = path
 
-    def __call__(self, val_loss, model):
+    def __call__(self, val_loss, net):
 
         score = -val_loss
 
         if self.best_score is None:
             self.best_score = score
-            self.save_checkpoint(val_loss, model)
+            self.save_checkpoint(val_loss, net)
         elif score < self.best_score + self.delta:
             self.counter += 1
             #print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
@@ -68,28 +71,28 @@ class EarlyStopping:
                 print("Early stopping invoked!")
         else:
             self.best_score = score
-            self.save_checkpoint(val_loss, model)
+            self.save_checkpoint(val_loss, net)
             self.counter = 0
 
-    def save_checkpoint(self, val_loss, model):
-        '''Saves model when validation loss decrease.'''
+    def save_checkpoint(self, val_loss, net):
+        '''Saves net when validation loss decrease.'''
         if self.verbose:
-            print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
-        torch.save(model.state_dict(), self.path)
+            print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving net ...')
+        torch.save(net.state_dict(), self.path)
         self.val_loss_min = val_loss
     
     
-def invoke(early_stopping, loss, model, implement=False):
+def invoke(early_stopping, loss, net, implement=False):
     if implement == False:
         return False
     else:
-        early_stopping(loss, model)
+        early_stopping(loss, net)
         if early_stopping.early_stop:
             print("Early stopping")
             return True
 
 
-def train_with_minibatches():
+def train_with_minibatches(net, train_loader, valid_loader, EPOCHS, PATIENCE, optimizer, criterion):
     
     train_loss, valid_loss = [], []
 
@@ -124,7 +127,7 @@ def train_with_minibatches():
     return net, train_loss, valid_loss
 
 
-def plot_losses(burn_in=20, train_loss, valid_loss):
+def plot_losses(train_loss, valid_loss, burn_in=20):
     plt.figure(figsize=(15,4))
     plt.plot(list(range(burn_in, len(train_loss))), train_loss[burn_in:], label='Training loss')
     plt.plot(list(range(burn_in, len(valid_loss))), valid_loss[burn_in:], label='Validation loss')
