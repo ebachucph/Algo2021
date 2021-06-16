@@ -45,8 +45,9 @@
  * Comparing different alelles
  * Statistics
  * Encoding scheme complexity?
- * Plot number of binders versus encoding schemes
- * Performance on y and size of data set on x - comparing the encoding schemes 
+ * Creating the output pandas matrix (Lasse)
+ * Plot number of binders versus encoding schemes 
+ * Performance on y and size of data set on x - comparing the encoding schemes (Alex)
 
 ## Discussion notes
 *	Hydrophobicity and charge relative change depending on the peptide composition
