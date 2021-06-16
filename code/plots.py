@@ -64,7 +64,7 @@ def plot_target_values(data, BINDER_THRESHOLD):
 
 
 
-def plot_roc_curve(peptide_length=[9]):
+def plot_roc_curve(fpr,tpr, roc_auc, peptide_length=[9]):
     """
     fpr, tpr needs to be defined in the main script 
 
@@ -79,7 +79,7 @@ def plot_roc_curve(peptide_length=[9]):
     
 
 
-def plot_mcc():
+def plot_mcc(y_test, pred, mcc):
     plt.title('Matthews Correlation Coefficient')
     plt.scatter(y_test.flatten().detach().numpy(), pred.flatten().detach().numpy(), label = 'MCC = %0.2f' % mcc)
     plt.legend(loc = 'lower right')

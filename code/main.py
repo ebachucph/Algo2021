@@ -124,12 +124,6 @@ for i, allele in enumerate(alleles):
                                       'AUC': roc_auc}, 
                                      ignore_index = True)            
             
-#            df_test.iloc[0,0] = allele
-#            df_test.iloc[0,1] = encoding
-#            df_test.iloc[0,2] = train_size
-#            df_test.iloc[0,3] = mcc
-#            df_test.iloc[0,4] = roc_auc
-
             print(f"Encoding {encoding} with training size {train_size} achieves MCC of {mcc:.2f} and AUC {roc_auc:.2f}")
 
 print(df_test)
