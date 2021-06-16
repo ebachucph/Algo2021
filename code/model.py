@@ -68,7 +68,6 @@ class EarlyStopping:
             #print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
             if self.counter >= self.patience:
                 self.early_stop = True
-                print("Early stopping invoked!")
         else:
             self.best_score = score
             self.save_checkpoint(val_loss, net)
