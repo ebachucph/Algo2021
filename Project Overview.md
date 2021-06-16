@@ -65,7 +65,7 @@
  * BLOSUM (Emil)
 * Neural Networks (Lasse)
 * Aim
-
+  
 ## Results notes
 * Overview comparing different encoding schemes in line plot
 * 
