@@ -54,15 +54,15 @@
 
 ## Introduction notes
 * Peptide MHC binding and importance (Emil)
- * What's going on
- * Factors that are important
- * T-cell - MHC interaction (short)
+  * What's going on
+  * Factors that are important
+  * T-cell - MHC interaction (short)
 * Introduction to the different encoding schemes
- * SPARSE/ONE_HOT
- * Charge (Emil)
- * Size (Emil)
- * Hydrophobicity (Emil)
- * BLOSUM (Emil)
+  * SPARSE/ONE_HOT
+  * Charge (Emil)
+  * Size (Emil)
+  * Hydrophobicity (Emil)
+  * BLOSUM (Emil)
 * Neural Networks (Lasse)
 * Aim
   
