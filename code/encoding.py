@@ -25,14 +25,13 @@ def encode_peptides(Xin, scheme_file):
 	
 	# Check if CHARGE is in scheme_file, if true load all CHARGE schemes and encode in special way
 	if "CHARGE" in scheme_file:
-		scheme_dir = dirname(scheme_file)
-		scheme_files = listdir(scheme_dir)
+		scheme_files = listdir(scheme_file)
 		
 		encoding_schemes = []
 		
 		for f in scheme_files:
 			if "CHARGE" in f:
-				encoding_schemes.append(load_scheme(scheme_dir + "/" + f))
+				encoding_schemes.append(load_scheme(scheme_file + "/" + f))
 		
 		for peptide_index, row in Xin.iterrows():
 			for aa_index in range(len(row.peptide)):
