@@ -51,3 +51,21 @@
 ## Discussion notes
 -	Hydrophobicity and charge relative change depending on the peptide composition
 -	Homology reduction (also in regards to size/charge)
+
+## Introduction notes
+- Peptide MHC binding and importance (Emil)
+ * What's going on
+ * Factors that are important
+ * T-cell - MHC interaction (short)
+- Introduction to the different encoding schemes
+ * SPARSE/ONE_HOT
+ * Charge (Emil)
+ * Size (Emil)
+ * Hydrophobicity (Emil)
+ * BLOSUM (Emil)
+- Neural Networks (Lasse)
+- Aim
+
+## Results notes
+- Overview comparing different encoding schemes in line plot
+- 
