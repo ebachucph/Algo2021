@@ -16,7 +16,7 @@ def encode_peptides(Xin):
     Encode AA seq of peptides using BLOSUM50.
     Returns a tensor of encoded peptides of shape (batch_size, MAX_PEP_SEQ_LEN, n_features)
     """
-    encoding_scheme = load_scheme(blosum_file)
+    encoding_scheme = load_scheme(scheme_file)
     
     batch_size = len(Xin)
     n_features = len(encoding_scheme)
