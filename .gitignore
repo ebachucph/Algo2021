@@ -1,0 +1,7 @@
+# pytorch
+/code/checkpoint.pt
+/code/__pycache__/
+
+#Word document
+/Algo21 introduction draft.docx
+/$go21 introduction draft.docx
