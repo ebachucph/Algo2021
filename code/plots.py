@@ -94,7 +94,7 @@ def performance_encoding_plot(df, perf_measure):
         fig, axes = plt.subplots()
         for encod, d in d_.groupby('Encoding'):
             axes.set_title("Performance versus Training Set Size %s"%allele)
-            axes.plot(d["Train_size"], d[perf_measure], linestyle='-', label=encod )
+            axes.plot(d["Train_size"].unique(), d.groupby("Train_size")[perf_measure].mean(), linestyle='-', label=encod )
             axes.legend(loc = 'upper left')
             axes.set_ylabel('%s'%perf_measure)
             axes.set_xlabel("Training Set Size")
