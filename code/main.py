@@ -13,7 +13,7 @@ from sklearn.utils import resample
 import pandas as pd
 
 # Define hyperparameters
-EPOCHS = 10
+EPOCHS = 1000
 MINI_BATCH_SIZE = 32
 N_HIDDEN_NEURONS_1 = 64
 N_HIDDEN_NEURONS_2 = 64
@@ -120,7 +120,7 @@ for j, allele in enumerate(alleles):
                 y_test_total = np.append(y_test_total, y_test, axis=0)
  
             # Do bootstrapping:
-            n_boot = 10
+            n_boot = 1000
             test_data = np.concatenate((pred_total.reshape(-1,1), y_test_total.reshape(-1,1)), axis=1)        
             mcc_list = np.zeros(n_boot)
             auc_list = np.zeros(n_boot)
