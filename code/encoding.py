@@ -67,11 +67,11 @@ def encode_peptides(Xin, scheme_file):
 
 def encode_parser(Xin, encoding):
     #Check structure of input schemes
-    ## If only one scheme given, encode normal
+    ## If only one encoding given, encode normal
     if isinstance(encoding, str):
         scheme_file = f"../data/schemes/{encoding}"
         return encode_peptides(Xin, scheme_file), Xin.target.values
-    
+    ## If encoding is a list, perform them separately and stack the numpy arrays
     if isinstance(encoding, list):
         arrays = []
         
