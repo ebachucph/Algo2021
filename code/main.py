@@ -42,7 +42,7 @@ for j, allele in enumerate(alleles):
             print(f"Training and testing on allele {allele} using encoding: {encoding} with training data size: {train_size}") 
     
             ## Do encoding
-            scheme_file = f"../data/schemes/{encoding}"
+            scheme_file = f"../data/schemes/MULTIPLE/{encoding}"
             X, y = encode_peptides(X_raw, scheme_file)
             n_features = X.shape[-1]
             print(f"Number of features in encoding: {n_features}")

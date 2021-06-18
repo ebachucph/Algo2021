@@ -33,9 +33,9 @@ class ANN(nn.Module):
 
     def forward(self, x):
         x = self.bn_1(self.leakyrelu(self.fc1(x)))
-        x = self.dropout(x)
+#        x = self.dropout(x)
         x = self.bn_2(self.leakyrelu(self.fc2(x)))
-        x = self.dropout(x)
+#        x = self.dropout(x)
         x = self.fc3(x)
         return x
     
