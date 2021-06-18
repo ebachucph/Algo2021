@@ -22,7 +22,7 @@ PATIENCE = 10
 
 ## Loop over different encodings and training sizes
 alleles = ['A0301']
-encodings = ["BLOSUM50","ONE_HOT", "ONE_HOT_MOD"]
+encodings = [["SINGLE/CHARGE", "SINGLE/SIZE", "SINGLE/HYDROPHOB"], "MULTIPLE/BLOSUM50"]
 train_sizes = [200, 500, 1000]
 perm_test = len(alleles)*len(encodings)*len(train_sizes)
 
@@ -42,8 +42,9 @@ for j, allele in enumerate(alleles):
             print(f"Training and testing on allele {allele} using encoding: {encoding} with training data size: {train_size}") 
     
             ## Do encoding
-            scheme_file = f"../data/schemes/MULTIPLE/{encoding}"
-            X, y = encode_peptides(X_raw, scheme_file)
+            # scheme_file = f"../data/schemes/MULTIPLE/{encoding}"
+            # X, y = encode_peptides(X_raw, scheme_file)
+            X, y = encode_parser(X_raw, encoding)
             n_features = X.shape[-1]
             print(f"Number of features in encoding: {n_features}")
     
