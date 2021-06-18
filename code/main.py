@@ -2,6 +2,7 @@ from parser import *
 from encoding import *
 from model import *
 from plots import *
+import os
 import torch
 from torch.autograd import Variable
 import torch.nn as nn
@@ -34,6 +35,12 @@ for j, allele in enumerate(alleles):
     ## Do parsing
     filename="../data/%s.dat"%allele
     X_raw = load_peptide_target(filename)
+    
+    # initialize an output directory using the allele name
+    out_dir='../data/%s_out'%allele
+    if not os.path.isdir(out_dir):
+        os.makedirs(out_dir)
+        
 
     for k, encoding in enumerate(encodings):
 
@@ -149,10 +156,18 @@ for j, allele in enumerate(alleles):
             mcc_std = np.std(mcc_list)
             auc_mean = np.mean(auc_list)    
             auc_std = np.std(auc_list)
+            
+            # make a new variable that is just the name of the encoding scheme if we are not combining
+            # else it is a concatenated name consisting of the different encoding schemes names
+            if type(encoding) == list:
+                tmp_ = [x.split('/')[1] for x in encoding]
+                encoding_ = "_".join(tmp_)
+            else:
+                encoding_ = encoding.split("/")[1]
 
             # Add to df
             df_test = df_test.append({'Allele': allele, 
-                                      'Encoding': encoding, 
+                                      'Encoding': encoding_, 
                                       'Train_size': train_size, 
                                       'MCC': mcc_mean,
                                       'MCC_std': mcc_std,
@@ -161,7 +176,11 @@ for j, allele in enumerate(alleles):
                                        }, 
                                        ignore_index = True)
             print(f"Allele {allele} using encoding {encoding} with training size {train_size} achieves MCC of {mcc_mean:.2f} and AUC of {auc_mean:.2f}")
-
+            out_n=f"{allele}-{'-'.join(df_test['Encoding'].unique())}.csv"
+            df_test.to_csv(os.path.join(out_dir,out_n))
+            
 # Do plotting
 performance_encoding_plot(df_test,"MCC","MCC_std")
 performance_encoding_plot(df_test,"AUC","AUC_std")
+performance_testsize_boxplot(df_test,"MCC","MCC_std")
+performance_testsize_boxplot(df_test,"AUC","AUC_std")
