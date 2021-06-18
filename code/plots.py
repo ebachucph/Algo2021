@@ -8,6 +8,7 @@ Created on Wed Jun 16 09:32:55 2021
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 def plot_peptide_distribution(raw_data, raw_set):
     """
@@ -90,16 +91,66 @@ def plot_mcc(y_test, pred, mcc):
     
 
 def performance_encoding_plot(df, perf_measure, errorbar):
-    print(df)
     fig, axes = plt.subplots()
     for allele, d_ in df.groupby('Allele'):
-        print(d_)
         for encod, d in d_.groupby('Encoding'):
-            print(d)
+            #print(encod)
+            
             axes.set_title("Performance versus Training set size for allele: %s"%allele)
             axes.errorbar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], linestyle='-', label=encod )
             axes.legend(loc = 'upper left')
             axes.set_ylabel('%s'%perf_measure)
             axes.set_xlabel("Training set size")
+            
         fig.savefig("perf_enc_%s_%s"%(allele,perf_measure),dpi=200)
         plt.show()
+
+
+def performance_testsize_boxplot(df, perf_measure, errorbar):
+    
+    # set width of bars
+    barWidth = 0.25
+    
+    for allele, d_ in df.groupby('Allele'):
+        
+        # initialize plot
+        fig, axes = plt.subplots()
+
+        # initalize variables for the positions of the bars
+        i = 0
+        r = []
+        
+        for encod, d in d_.groupby('Encoding'):
+            
+            # Set position of bar on X axis
+            # we loop over the different encodings and we need to update 
+            # the position of the different bar posithin with + a barWidth 
+            if i == 0:
+                i+=1
+                #r = [0]+[barWidth/2*(len(d_['Encoding'].unique())-1)+r for r in np.arange(1,len(df_test["Train_size"].unique()))]
+                r = np.arange(len(d["Train_size"].unique()))
+                #r = [barWidth/2*(len(d_['Encoding'].unique())-1)+r for r in np.arange(len(d["Train_size"].unique())) ]
+            else:
+                r = [x + barWidth for x in r]
+            
+            # plot the bars for the different encodings and test sizes
+            axes.bar(r, d[perf_measure], width=barWidth, yerr=d[errorbar], label=encod)
+
+            
+        # make the plot look pretty
+        axes.set_title("Performance versus Training set size for allele: %s"%allele, fontweight="bold", pad=10)
+        axes.set_xlabel('Test size', fontweight='bold')
+        axes.set_ylabel('%s'%perf_measure, fontweight='bold')
+        # we are adjusting the x tick location dynamically depending how many different
+        # encoding schemes that we are using
+        axes.set_xticks([r + barWidth/2*(len(d_['Encoding'].unique())-1) for r in range(len(d_["Train_size"].unique()))])
+        axes.set_xticklabels(d_["Train_size"].unique())
+        axes.legend(ncol=len(d_['Encoding'].unique()), loc='upper left', )
+        fig.tight_layout()
+        
+        
+        #fig.savefig("perf_enc_%s_%s"%(allele,perf_measure),dpi=200)
+        #plt.show()
+
+#performance_testsize_boxplot(df_test,"AUC","AUC_std")
+#performance_testsize_boxplot(df_test,"MCC","MCC_std")
