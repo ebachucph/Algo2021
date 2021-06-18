@@ -63,4 +63,19 @@ def encode_peptides(Xin, scheme_file):
                 #Xout[peptide_index, aa_index] = encoding_scheme[ row.peptide[aa_index] ].values
                 Xout[peptide_index, aa_index] = encoding_scheme.loc[ row.peptide[aa_index] ].values
                 
-    return Xout, Xin.target.values
+    return Xout #, Xin.target.values
+
+def encode_parser(Xin, encoding):
+    #Check structure of input schemes
+    ## If only one scheme given, encode normal
+    if isinstance(encoding, str):
+        scheme_file = f"./data/schemes/{encoding}"
+        return encode_peptides(Xin, scheme_file), Xin.target.values
+    
+    if isinstance(encoding, list):
+        arrays = []
+        
+        for scheme in encoding:
+            scheme_file = f"./data/schemes/{scheme}"
+            arrays.append(encode_peptides(Xin, scheme_file))
+        return np.dstack(arrays), Xin.target.values
