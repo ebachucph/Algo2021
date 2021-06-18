@@ -90,27 +90,13 @@ def plot_mcc(y_test, pred, mcc):
     
 
 def performance_encoding_plot(df, perf_measure, errorbar):
-    print(df)
     fig, axes = plt.subplots()
     for allele, d_ in df.groupby('Allele'):
         for encod, d in d_.groupby('Encoding'):
-            print(d)
             axes.set_title("Performance versus Training set size for allele: %s"%allele)
             axes.errorbar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], linestyle='-', label=encod )
             axes.legend(loc = 'upper left')
             axes.set_ylabel('%s'%perf_measure)
             axes.set_xlabel("Training set size")
-        fig.savefig("perf_enc_%s_%s"%(allele,perf_measure))
+        fig.savefig("perf_enc_%s_%s"%(allele,perf_measure),dpi=200)
         plt.show()
-
-#def performance_encoding_plot(df, perf_measure, errorbar):
-#    fig, axes = plt.subplots()
-#    for allele, d_ in df.groupby('Allele'):
-#        for encod, d in d_.groupby('Encoding'):
-#            axes.set_title("Performance versus Training Set Size %s"%allele)
-#            axes.bar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], label=encod )
-#            axes.legend(loc = 'upper left')
-#            axes.set_ylabel('%s'%perf_measure)
-#            axes.set_xlabel("Training Set Size")
-#        fig.savefig("perf_enc_%s_%s"%(allele,perf_measure))
-#        plt.show()

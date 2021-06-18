@@ -17,7 +17,7 @@ EPOCHS = 1000
 MINI_BATCH_SIZE = 64
 N_HIDDEN_NEURONS_1 = 32
 N_HIDDEN_NEURONS_2 = 32
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.001
 PATIENCE = 10
 
 ## Loop over different encodings and training sizes
