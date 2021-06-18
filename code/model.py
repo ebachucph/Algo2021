@@ -7,6 +7,8 @@ def init_weights(m):
     """
     https://pytorch.org/docs/master/nn.init.html
     """
+    seed=1
+    torch.manual_seed(seed)
     if isinstance(m, nn.Linear):
         nn.init.kaiming_uniform_(m.weight)
         nn.init.constant_(m.bias, 0.01) # alternative command: m.bias.data.fill_(0.01)
@@ -27,7 +29,7 @@ class ANN(nn.Module):
         self.bn_2 = nn.BatchNorm1d(num_features=n_l2)
 
         # Dropout
-        self.dropout = nn.Dropout(0.5)
+        self.dropout = nn.Dropout(0.25)
 
     def forward(self, x):
         x = self.bn_1(self.leakyrelu(self.fc1(x)))
@@ -92,7 +94,7 @@ def invoke(early_stopping, loss, net, implement=False):
     else:
         early_stopping(loss, net)
         if early_stopping.early_stop:
-            print("Early stopping")
+#            print("Early stopping")
             return True
 
 
@@ -113,8 +115,8 @@ def train_with_minibatches(net, train_loader, valid_loader, EPOCHS, PATIENCE, op
             batch_loss += loss.data
         train_loss.append(batch_loss / len(train_loader))
 
-        if epoch % (EPOCHS//10) == 0:
-            print('Train Epoch: {}\tLoss: {:.6f}'.format(epoch, train_loss[-1]))
+#        if epoch % (EPOCHS//10) == 0:
+            #print('Train Epoch: {}\tLoss: {:.6f}'.format(epoch, train_loss[-1]))
 
         batch_loss = 0
         net.eval()
