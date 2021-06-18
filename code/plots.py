@@ -90,9 +90,12 @@ def plot_mcc(y_test, pred, mcc):
     
 
 def performance_encoding_plot(df, perf_measure, errorbar):
+    print(df)
     fig, axes = plt.subplots()
     for allele, d_ in df.groupby('Allele'):
+        print(d_)
         for encod, d in d_.groupby('Encoding'):
+            print(d)
             axes.set_title("Performance versus Training set size for allele: %s"%allele)
             axes.errorbar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], linestyle='-', label=encod )
             axes.legend(loc = 'upper left')
