@@ -143,7 +143,7 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
         # half a barWidth and then subtract the barWidth * numb of encoding so we move the tick to the middle
         axes.set_xticks([p+barWidth/2-(barWidth*len(d_['Encoding'].unique())/2) for p in r])
         axes.set_xticklabels(d_["Train_size"].unique())
-        axes.legend(ncol=len(d_['Encoding'].unique()), loc='upper left', )
+        axes.legend(loc="lower center", bbox_to_anchor=(0.5, -0.4), fancybox=True, ncol=4)
         fig.tight_layout()
         
         out_dir=f"../data/{allele}_out"
