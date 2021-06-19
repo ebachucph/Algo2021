@@ -22,8 +22,8 @@ LEARNING_RATE = 0.01
 PATIENCE = 10
 
 ## Loop over different encodings and training sizes
-alleles = ['A0301', 'A0201']
-encodings = ["MULTIPLE/BLOSUM50", "MULTIPLE/ONE_HOT"]
+alleles = ['A0301', 'A0201', 'A3301']
+encodings = ["MULTIPLE/BLOSUM50", "MULTIPLE/ONE_HOT", "MULTIPLE/ONE_HOT_FRAC", "MULTIPLE/ONE_HOT_MOD", ["SINGLE/CHARGE", "SINGLE/SIZE", "SINGLE/HYDROPHOB"], ]
 #encodings = [["SINGLE/CHARGE", "SINGLE/SIZE", "SINGLE/HYDROPHOB"], "MULTIPLE/BLOSUM50"]
 
 df_test = pd.DataFrame(columns=['Allele', 'Encoding', 'Train_size', 'MCC', 'MCC_std', 'AUC', 'AUC_std'])

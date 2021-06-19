@@ -122,7 +122,6 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
         # the size needed is numb of encodings * barWidth + space between
         #r = [0+r*(barWidth*len(d_['Encoding'].unique())+2*barWidth) for r in np.arange(len(d_["Train_size"].unique()))]
         r = [0+r*(barWidth*len(d_['Encoding'].unique())+1*barWidth) for r in np.arange(len(d_["Train_size"].unique()))]
-        print(r)
         
         for encod, d in d_.groupby('Encoding'):
             
@@ -143,7 +142,7 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
         # half a barWidth and then subtract the barWidth * numb of encoding so we move the tick to the middle
         axes.set_xticks([p+barWidth/2-(barWidth*len(d_['Encoding'].unique())/2) for p in r])
         axes.set_xticklabels(d_["Train_size"].unique())
-        axes.legend(loc="lower center", bbox_to_anchor=(0.5, -0.4), fancybox=True, ncol=4)
+        axes.legend(loc="lower center", bbox_to_anchor=(0.5, -0.5), fancybox=True, ncol=3)
         fig.tight_layout()
         
         out_dir=f"../data/{allele}_out"
