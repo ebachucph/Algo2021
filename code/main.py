@@ -184,6 +184,8 @@ for j, allele in enumerate(alleles):
 # Do plotting
 performance_encoding_plot(df_test,"MCC","MCC_std")
 performance_encoding_plot(df_test,"AUC","AUC_std")
-performance_testsize_boxplot(df_test,"MCC","MCC_std")
-performance_testsize_boxplot(df_test,"AUC","AUC_std")
+performance_testsize_barplot(df_test,"MCC","MCC_std")
+performance_testsize_barplot(df_test,"AUC","AUC_std")
+boxplot(df_test, 'A0201', 1976, 'AUC_bootstrap')
+boxplot(df_test, 'A0201', 1976, 'MCC_bootstrap')
 #barplot_oneallele(df_test,'A0201', 1976, "AUC","AUC_std")

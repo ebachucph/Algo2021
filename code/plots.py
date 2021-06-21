@@ -120,7 +120,7 @@ def performance_encoding_plot(df, perf_measure, errorbar):
         #plt.show()
 
 
-def performance_testsize_boxplot(df, perf_measure, errorbar):
+def performance_testsize_barplot(df, perf_measure, errorbar):
     
     # set width of bars
     barWidth = 0.25
@@ -170,6 +170,42 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
         #plt.show()
 
 
+def boxplot(df, allele, train_size, bootstrap_measure):
+    
+    # set width of bars
+    barWidth = 0.25
+    
+    #for allele, d_ in df.groupby('Allele'):
+        
+    # initialize plot
+    fig, axes = plt.subplots()
+    
+    d_ = df.loc[df.Allele == allele].loc[df.Train_size == train_size]
+    
+    
+    #axes.boxplot(d_[bootstrap_measure], labels=d_['Encoding'].unique())
+
+    pos=0
+    data=np.array(len)
+    labels=[]
+    for encod, d in d_.groupby('Encoding'):
+        #print(d)
+        labels.append(encod)
+        axes.boxplot(d[bootstrap_measure], positions=[pos], widths=[0.5])
+        pos+=0.75
+        
+    axes.set_title("Performance for allele: %s"%allele, pad=10)
+    axes.set_xlabel("Encoding scheme", labelpad=10)
+    axes.set_ylabel('%s'%(bootstrap_measure.split('_')[0]))
+    axes.set_xticklabels(['BLOSUM50','C_S_H', 'OH', 'OHF', 'OHM'])
+    
+    out_dir=f"../data/{allele}_out"
+    out_n=f"boxplot_{allele}_{bootstrap_measure.split('_')[0]}"
+    fig.savefig(os.path.join(out_dir,out_n),dpi=200)   
+    
+    
+        
+        
 def barplot_oneallele(df, allele, train_size, perf_measure, errorbar):
     
     # set width of bars
