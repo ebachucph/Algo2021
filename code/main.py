@@ -26,7 +26,7 @@ alleles = ['A0301', 'A0201', 'A3301']
 encodings = ["MULTIPLE/BLOSUM50", "MULTIPLE/ONE_HOT", "MULTIPLE/ONE_HOT_FRAC", "MULTIPLE/ONE_HOT_MOD", ["SINGLE/CHARGE", "SINGLE/SIZE", "SINGLE/HYDROPHOB"], ]
 #encodings = [["SINGLE/CHARGE", "SINGLE/SIZE", "SINGLE/HYDROPHOB"], "MULTIPLE/BLOSUM50"]
 
-df_test = pd.DataFrame(columns=['Allele', 'Encoding', 'Train_size', 'MCC', 'MCC_std', 'AUC', 'AUC_std'])
+df_test = pd.DataFrame(columns=['Allele', 'Encoding', 'Train_size', 'MCC', 'MCC_bootstrap', 'MCC_std', 'AUC', 'AUC_bootstrap', 'AUC_std'])
 
 n_kf_outer = 5
 n_kf_inner = 5 
@@ -171,8 +171,10 @@ for j, allele in enumerate(alleles):
                                       'Train_size': train_size, 
                                       'MCC': mcc_mean,
                                       'MCC_std': mcc_std,
+                                      'MCC_bootstrap' : mcc_list,
                                       'AUC': auc_mean,
                                       'AUC_std': auc_std,
+                                      'AUC_bootstrap': auc_list,
                                        }, 
                                        ignore_index = True)
             print(f"Allele {allele} using encoding {encoding} with training size {train_size} achieves MCC of {mcc_mean:.2f} and AUC of {auc_mean:.2f}")
@@ -184,3 +186,4 @@ performance_encoding_plot(df_test,"MCC","MCC_std")
 performance_encoding_plot(df_test,"AUC","AUC_std")
 performance_testsize_boxplot(df_test,"MCC","MCC_std")
 performance_testsize_boxplot(df_test,"AUC","AUC_std")
+#barplot_oneallele(df_test,'A0201', 1976, "AUC","AUC_std")
