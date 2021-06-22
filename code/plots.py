@@ -92,22 +92,35 @@ def plot_mcc(y_test, pred, mcc):
     
 
 def performance_encoding_plot(df, perf_measure, errorbar):
-    fig, axes = plt.subplots()
+    #fig, axes = plt.subplots()
     for allele, d_ in df.groupby('Allele'):
+        fig, axes = plt.subplots()
         for encod, d in d_.groupby('Encoding'):
             #print(encod)
             
-            axes.set_title("Performance versus Training set size for allele: %s"%allele)
-            axes.errorbar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], linestyle='-', label=encod )
-            axes.legend(loc = 'upper left')
+            axes.set_title("Performance versus Training set size for allele: %s"%allele, pad=10)
+            axes.errorbar(d["Train_size"].unique(), d[perf_measure], yerr=d[errorbar], linestyle='-', label=encod, capsize=3, alpha=0.8 )
+            axes.legend(loc = 'lower right')
             axes.set_ylabel('%s'%perf_measure)
-            axes.set_xlabel("Training set size")
-            
-        fig.savefig("perf_enc_%s_%s"%(allele,perf_measure),dpi=200)
-        plt.show()
+            #axes.set_xlabel("Training set size")
+            axes.set_xlabel("fraction of training set")
+            if perf_measure == 'AUC':
+                axes.set_ylim([0.70,1])
+            if perf_measure == 'MCC':
+                axes.set_ylim([0,0.9])
+            axes.set_xticks([int(t) for t in d_["Train_size"].unique()])
+            #axes.set_xticklabels(d_["Train_size"].unique())
+            axes.set_xticklabels([0.2,0.5,1])
+        
+        
+        out_dir=f"../data/{allele}_out"
+        out_n=f"perf_testsize_line_{allele}_{perf_measure}-{'-'.join(d_['Encoding'].unique())}"
+        fig.savefig(os.path.join(out_dir,out_n),dpi=200)
+        #fig.savefig("perf_enc_%s_%s"%(allele,perf_measure),dpi=200)
+        #plt.show()
 
 
-def performance_testsize_boxplot(df, perf_measure, errorbar):
+def performance_testsize_barplot(df, perf_measure, errorbar):
     
     # set width of bars
     barWidth = 0.25
@@ -131,17 +144,23 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
             r = [x + barWidth for x in r]
 
             # plot the bars for the different encodings and test sizes
-            axes.bar(r, d[perf_measure], width=barWidth, yerr=d[errorbar], label=encod)
+            axes.bar(r, d[perf_measure], width=barWidth, yerr=d[errorbar], label=encod, capsize=3, alpha=0.8, ecolor='darkslategray')
 
             
         # make the plot look pretty
-        axes.set_title("Performance versus Training set size for allele: %s"%allele, fontweight="bold", pad=10)
-        axes.set_xlabel('Test size', fontweight='bold')
-        axes.set_ylabel('%s'%perf_measure, fontweight='bold')
+        axes.set_title("Performance versus Training set size for allele: %s"%allele, pad=10)
+        #axes.set_xlabel('Training set size')
+        axes.set_xlabel("fraction of training set")
+        axes.set_ylabel('%s'%perf_measure)
+        if perf_measure == 'AUC':
+            axes.set_ylim([0.70,1])
+        if perf_measure == 'MCC':
+            axes.set_ylim([0,0.9])
         # we are adjusting the x tick location from the last r (bar is in the middle) so we need to add
         # half a barWidth and then subtract the barWidth * numb of encoding so we move the tick to the middle
         axes.set_xticks([p+barWidth/2-(barWidth*len(d_['Encoding'].unique())/2) for p in r])
-        axes.set_xticklabels(d_["Train_size"].unique())
+        #axes.set_xticklabels(d_["Train_size"].unique())
+        axes.set_xticklabels([0.2,0.5,1])
         axes.legend(loc="lower center", bbox_to_anchor=(0.5, -0.5), fancybox=True, ncol=3)
         fig.tight_layout()
         
@@ -150,5 +169,88 @@ def performance_testsize_boxplot(df, perf_measure, errorbar):
         fig.savefig(os.path.join(out_dir,out_n),dpi=200)
         #plt.show()
 
-#performance_testsize_boxplot(df_test,"AUC","AUC_std")
-#performance_testsize_boxplot(df_test,"MCC","MCC_std")
+
+def boxplot(df, allele, train_size, bootstrap_measure):
+    
+    # set width of bars
+    barWidth = 0.25
+    
+    #for allele, d_ in df.groupby('Allele'):
+        
+    # initialize plot
+    fig, axes = plt.subplots()
+    
+    d_ = df.loc[df.Allele == allele].loc[df.Train_size == train_size]
+    
+    
+    #axes.boxplot(d_[bootstrap_measure], labels=d_['Encoding'].unique())
+
+    pos=0
+    data=np.array(len)
+    labels=[]
+    for encod, d in d_.groupby('Encoding'):
+        #print(d)
+        labels.append(encod)
+        axes.boxplot(d[bootstrap_measure], positions=[pos], widths=[0.5])
+        pos+=0.75
+        
+    axes.set_title("Performance for allele: %s"%allele, pad=10)
+    axes.set_xlabel("Encoding scheme", labelpad=10)
+    axes.set_ylabel('%s'%(bootstrap_measure.split('_')[0]))
+    axes.set_xticklabels(['BLOSUM50','C_S_H', 'OH', 'OHF', 'OHM'])
+    
+    out_dir=f"../data/{allele}_out"
+    out_n=f"boxplot_{allele}_{bootstrap_measure.split('_')[0]}"
+    fig.savefig(os.path.join(out_dir,out_n),dpi=200)   
+    
+    
+        
+        
+def barplot_oneallele(df, allele, train_size, perf_measure, errorbar):
+    
+    # set width of bars
+    barWidth = 0.25
+    
+    #for allele, d_ in df.groupby('Allele'):
+    d_ = df.loc[df["Allele"] == allele].loc[df["Train_size"]==1976]
+        
+    # initialize plot
+    fig, axes = plt.subplots()
+
+    # initalize variables for the positions of the bars dynamically depending how many different
+    # encoding schemes that we are using
+    # the size needed is numb of encodings * barWidth + space between
+    #r = [0+r*(barWidth*len(d_['Encoding'].unique())+2*barWidth) for r in np.arange(len(d_["Train_size"].unique()))]
+    r = [0+r*(barWidth*len(d_['Encoding'].unique())+1*barWidth) for r in [0]]
+    
+    for encod, d in d_.groupby('Encoding'):
+    #d = d_.loc[d_["Train_size"]==int(train_size)]
+        
+        # Set position of bar on X axis
+        # we loop over the different encodings and we need to update 
+        # the position of the different bar posithin with + a barWidth 
+        r = [x + barWidth for x in r]
+    
+        # plot the bars for the different encodings and test sizes
+        axes.bar(r, d[perf_measure], width=barWidth, yerr=d[errorbar], label=encod, capsize=3, alpha=0.8, ecolor='darkslategray')
+    
+            
+    # make the plot look pretty
+    axes.set_title("Performance of different encodings for allele: %s"%allele, pad=10)
+    axes.set_xlabel('Training set size')
+    axes.set_ylabel('%s'%perf_measure)
+    if perf_measure == 'AUC':
+        axes.set_ylim([0.60,1])
+    if perf_measure == 'MCC':
+        axes.set_ylim([-0.05,0.9])
+    # we are adjusting the x tick location from the last r (bar is in the middle) so we need to add
+    # half a barWidth and then subtract the barWidth * numb of encoding so we move the tick to the middle
+    axes.set_xticks([p+barWidth/2-(barWidth*len(d_['Encoding'].unique())/2) for p in r])
+    axes.set_xticklabels(d_["Train_size"].unique())
+    axes.legend(loc="lower center", bbox_to_anchor=(0.5, -0.5), fancybox=True, ncol=3)
+    fig.tight_layout()
+    
+    out_dir=f"../data/{allele}_out"
+    out_n=f"bar_{allele}_only_{perf_measure}-{'-'.join(d_['Encoding'].unique())}"
+    fig.savefig(os.path.join(out_dir,out_n),dpi=200)
+    #plt.show()
